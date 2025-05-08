@@ -13,17 +13,17 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                sh 'docker-compose exec -T nodeapp npm install'
             }
         }
         stage('Test') {
             steps {
-                sh 'npm test'
+                sh 'docker-compose exec -T nodeapp npm test'
             }
         }
         stage('Build') {
             steps {
-                sh 'npm run build'
+                sh 'docker-compose exec -T nodeapp npm run build'
             }
         }
         stage('Build Docker Image') {
