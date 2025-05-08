@@ -1,8 +1,8 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'Node 18' // Make sure to configure this in Jenkins global tools
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub') // Use the ID you set
     }
 
     stages {
@@ -24,6 +24,16 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'npm run build'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+                        def app = docker.build("yourusername/your-repo:${env.BUILD_NUMBER}")
+                        app.push()
+                    }
+                }
             }
         }
     }
